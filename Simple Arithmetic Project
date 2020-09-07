@@ -1,0 +1,54 @@
+/**
+ * This is an Arithmatic Program to show the basic math applications in Java
+ * @author Zach Showman
+ * @version 09/7/2020
+ **/
+import java.util.Scanner;
+
+public class SimpleMath {
+
+    public static void main(String[] args) {
+        Scanner scnr = new Scanner(System.in);
+        int num1; 
+        int num2; 
+        
+        System.out.print ("Enter the first number: ");
+        num1 = scnr.nextInt(); 
+        
+        System.out.print ("Enter the second number: ");
+        num2 = scnr.nextInt();
+        
+        System.out.print (num1);
+        System.out.print (" + ");
+        System.out.print (num2);
+        System.out.print (" = ");
+        System.out.println (num1 + num2);
+        
+        System.out.print (num1);
+        System.out.print (" - ");
+        System.out.print (num2);
+        System.out.print (" = ");
+        System.out.println (num1 - num2);
+        
+        System.out.print (num1);
+        System.out.print (" * ");
+        System.out.print (num2);
+        System.out.print (" = ");
+        System.out.println (num1 * num2);
+        
+        System.out.print (num1);
+        System.out.print (" / ");
+        System.out.print (num2);
+        System.out.print (" = ");
+        System.out.println (num1 / num2);
+        
+        System.out.print (num1);
+        System.out.print (" % ");
+        System.out.print (num2);
+        System.out.print (" = ");
+        System.out.println (num1 % num2);
+        
+        System.out.print ("The average of your two numbers is: "); 
+        System.out.println ((num1 + num2) / 2); 
+    }
+}
