@@ -18,35 +18,15 @@ public class SimpleMath {
         System.out.print ("Enter the second number: ");
         num2 = scnr.nextInt();
         
-        System.out.print (num1);
-        System.out.print (" + ");
-        System.out.print (num2);
-        System.out.print (" = ");
-        System.out.println (num1 + num2);
+        System.out.println (num1 + " + " + num2 + " = " + (num1 + num2) );
         
-        System.out.print (num1);
-        System.out.print (" - ");
-        System.out.print (num2);
-        System.out.print (" = ");
-        System.out.println (num1 - num2);
+        System.out.println (num1 + " - " + num2 + " = " + (num1 - num2) ); 
         
-        System.out.print (num1);
-        System.out.print (" * ");
-        System.out.print (num2);
-        System.out.print (" = ");
-        System.out.println (num1 * num2);
+        System.out.println (num1 + " * " + num2 + " = " + (num1 * num2) ); 
         
-        System.out.print (num1);
-        System.out.print (" / ");
-        System.out.print (num2);
-        System.out.print (" = ");
-        System.out.println (num1 / num2);
+        System.out.println (num1 + " / " + num2 + " = " + (num1 / num2) );
         
-        System.out.print (num1);
-        System.out.print (" % ");
-        System.out.print (num2);
-        System.out.print (" = ");
-        System.out.println (num1 % num2);
+        System.out.println (num1 + " % " + num2 + " = " + (num1 % num2) );
         
         System.out.print ("The average of your two numbers is: "); 
         System.out.println ((num1 + num2) / 2); 
