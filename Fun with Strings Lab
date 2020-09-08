@@ -1,0 +1,34 @@
+/**
+ * This a program that shows you how many characters are in your name, as well as what characters your name starts and ends with. 
+ * @author Zach Showman
+ * @version 20200908
+ */
+import java.util.Scanner;
+
+public class FunWithStringsIntro {
+
+    public static void main(String[] args) {
+        Scanner input = new Scanner(System.in);
+        String userName;
+        int userLength;
+        char myChar; 
+        
+        System.out.print ("Enter your name: ");
+        userName = input.next();
+        
+        System.out.println ("Hello " + userName + "!");
+        
+        userLength = userName.length(); 
+        System.out.println ("Your name is " + userLength + " letters long.");
+        
+        myChar = userName.charAt(0);
+        System.out.println ("Your name starts with a " + myChar + ".");
+        
+        myChar = userName.charAt(userName.length() - 1);
+        System.out.println ("Your name ends with a " + myChar + ".");
+        
+        System.out.println ("Goodbye!");
+        
+        input.close();
+    }
+}
