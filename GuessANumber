@@ -1,0 +1,55 @@
+import java.util.Scanner;
+import java.util.Random;
+
+public class GuessANumber {
+
+	public static void main(String[] args) {
+		Scanner input = new Scanner(System.in);
+		
+		System.out.print("Enter a random seed: ");
+		int userSeed = input.nextInt(); //User picks the seed to be used in the random number generator
+		
+		Random randGen = new Random(userSeed);
+		int randNum = randGen.nextInt(200) + 1; //Picks a random number between 1-200 based on the seed the user chose
+		
+		System.out.print("Enter a guess between 1 and 200: ");
+		int userGuess = input.nextInt();
+		
+		int numTries = 1; //Starts at 1 because the loop doesn't initialize unless the user guesses wrong, so if the user picks the right number on the first try, numTries == 0
+		while (userGuess != randNum) {
+			numTries++; //Adds one to numTries with each wrong guess
+			if (userGuess < 1 || userGuess > 200) {
+				System.out.println("Your guess is out of range.  Pick a number between 1 and 200.");
+			} //Comment to let the user know if they guessed out of range, but it still will be evaluated as too high or too low
+			if (userGuess < randNum) {
+				System.out.println("Your guess was too low - try again." + "\n");
+			} else if (userGuess > randNum) {
+				System.out.println("Your guess was too high - try again." + "\n");
+			}
+			System.out.print("Enter a guess between 1 and 200: ");
+			userGuess = input.nextInt(); //Replaced userGuess with their new guess, and will go back to the beginning of the while loop 
+		}
+		
+		System.out.println("Congratulations! Your guess was correct!" + "\n");
+		
+		System.out.println("I had chosen " + randNum + " as the target number.");
+		System.out.println("You guessed it in " + numTries + " tries.");
+		
+		if (numTries < 2) { // Simple if/else if loop to give the user a comment based on their guessing skills
+			System.out.println("That was impossible!");
+		} else if (numTries < 4) {
+			System.out.println("You're pretty lucky!");
+		} else if (numTries < 8) {
+			System.out.println("Not bad, not bad...");
+		} else if (numTries < 9) {
+			System.out.println("That was not very impressive.");
+		} else if (numTries < 11) {
+			System.out.println("Are you having any fun at all?");
+		} else {
+			System.out.println("Maybe you should play something else.");
+		}
+		
+		input.close();
+	}
+
+}
