@@ -1,0 +1,56 @@
+import java.util.Scanner;
+
+public class LuhnAlgortithm {
+
+	public static void main(String[] args) {
+		Scanner input = new Scanner(System.in);
+		
+		System.out.print("Enter a credit card number (enter a blank line to quit): ");
+        String creditCard = input.nextLine();
+        int cardLength = creditCard.length();
+        
+        int checkDigit;
+        while (!creditCard.equals("")) {
+        	if (cardLength == 16) {
+    			int sum = 0;
+        		for (int i=0; i < 15; i++) {
+        			int val = Character.getNumericValue(creditCard.charAt(i));
+        			if (i % 2 == 0) {
+        				val = val * 2;
+        				if (val > 9) {
+        					val = val - 9;
+        				}
+        				sum = val + sum;
+        			}
+        			else {
+        				sum = val + sum;
+        			}
+        		}
+        		String sumString = Integer.toString(sum);
+        		int sum2 = Character.getNumericValue(sumString.charAt((sumString.length() - 1)));
+        		if (sum2 != 0) {
+        			sum2 = 10 - sum2;
+        		}
+        		checkDigit = Character.getNumericValue(creditCard.charAt(creditCard.length() - 1));
+        		System.out.println("Check digit should be: " + sum2);
+        		System.out.println("Check digit is: " + checkDigit);
+        		if (checkDigit == sum2) {
+        			System.out.println("Number is valid.\n");
+        		}
+        		else {
+        			System.out.println("Number is not valid.\n");
+        		}
+        	} 
+        	else {
+        		System.out.println("ERROR! Number MUST have exactly 16 digits.\n");
+        	}
+        	System.out.print("Enter a credit card number (enter a blank line to quit): ");
+            creditCard = input.nextLine();
+            cardLength = creditCard.length();
+        }
+        
+        System.out.println("Goodbye!");
+        
+        input.close();
+	}
+}
