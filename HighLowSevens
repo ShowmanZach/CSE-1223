@@ -1,0 +1,194 @@
+/**
+ * High, Low, Sevens game where the user plays against the computer to predict if the total of two dice will be higher, lower, or exactly 7.
+ * @author Zach Showman
+ * @version November 2, 2020
+ *
+ */
+import java.util.Arrays;
+import java.util.Random;
+import java.util.Scanner;
+
+public class HighLowSevens {
+
+	/**
+	 * Prompts the user for an amount to bet. Ensures that the amount will be
+	 * between 0 and the maximum number of dollars they have available.
+	 *
+	 * @param in         A Scanner to provide input
+	 * @param maxDollars the maximum number of dollars available
+	 * @return the amount to bet, guaranteed to be between 0 and maxDollars
+	 */
+	public static int promptForAmount(Scanner in, int maxDollars) {
+		System.out.print("Enter an amount to bet (0 to quit): ");
+		int betAmount = Integer.parseInt(in.nextLine());
+		if (betAmount < 0 || betAmount > maxDollars) {
+			while (betAmount < 0 || betAmount > maxDollars) {
+				System.out.println("Your bet must be between 0 and " + maxDollars + " dollars.");
+				System.out.println("You have " + maxDollars + " dollars.");
+				System.out.print("Enter an amount to bet (0 to quit): ");
+				betAmount = Integer.parseInt(in.nextLine());
+			}
+		}
+		
+		return betAmount;
+	}
+
+	/**
+	 * Prompts the user to enter a single character and ensures that the user must
+	 * input either an 'H', an 'L' or an 'S'. If they enter a correct character in
+	 * lowercase, converts it to uppercase.
+	 *
+	 * @param in A Scanner to provide input
+	 * @return a choice of 'H', 'L' or 'S' guaranteed to be in uppercase.
+	 */
+	public static char promptForChoice(Scanner in) {
+		System.out.print("High, low or sevens (H/L/S)?: ");
+		String userInput = in.nextLine();
+		
+		while (userInput.isEmpty()) {
+			System.out.println("You must enter only H, L or S.");
+			System.out.print("High, low or sevens (H/L/S)?: ");
+			userInput = in.nextLine();
+		}
+		
+		char userChar = userInput.toUpperCase().charAt(0);
+		
+		while (userChar != 'H' && userChar != 'L' && userChar != 'S' || userInput.length() > 1) {
+			System.out.println("You must enter only H, L or S.");
+			System.out.print("High, low or sevens (H/L/S)?: ");
+			userInput = in.nextLine();
+			
+			while (userInput.isEmpty()) {
+				System.out.println("You must enter only H, L or S.");
+				System.out.print("High, low or sevens (H/L/S)?: ");
+				userInput = in.nextLine();
+			}
+			
+			userChar = userInput.toUpperCase().charAt(0);
+		}
+
+		return userChar;
+	}
+	
+	/**
+	 * Returns an array of length numDice where each entry holds a random value
+	 * between 1 and 6 (representing the roll of a single die).
+	 *
+	 * @param rnd     A Random number generator to use
+	 * @param numDice number of dice to roll
+	 * @return an array containing numDice values between 1 and 6
+	 */
+	public static int[] rollDice(Random rnd, int numDice) {
+		int[] rollResult = new int[numDice];
+		for (int i = 0; i < rollResult.length; i++) {
+			rollResult[i] = rnd.nextInt(6) + 1;
+		}
+		
+		return rollResult;
+	}
+
+	/**
+	 * Returns the sum of all of the values in the array dice. Note that this method
+	 * should be able to be called with an arbitrary number of dice so do not
+	 * hardcode it to only work with 2 dice.
+	 *
+	 * @param dice the values to be displayed
+	 * @return the sum of the values in the array dice
+	 */
+	public static int totalDice(int[] dice) {
+		int diceNum = 0;
+		int diceTotal = 0;
+		for (int i=0; i<dice.length; i++) {
+			diceNum = dice[i];
+			diceTotal = diceTotal + diceNum;
+		}
+		
+		return diceTotal;
+	}
+
+	/**
+	 * Returns the amount won or lost according to the choice made, the total on the
+	 * dice and the bet. If the choice is 'S' and the total is 7 this is 4 times the
+	 * bet. If the choice is 'H' and the total is >=8 this is the same as the bet.
+	 * If the choice is 'L' and the total is <=6 - it is also the same as the bet
+	 * Otherwise, the player has lost and this function returns the negative value
+	 * of their bet.
+	 *
+	 * @param choice One of 'H', 'L', or 'S' - must be uppercase
+	 * @param total  the total of the dice rolled
+	 * @param bet    the dollar amount that has been bet
+	 * @return the correct amount won or lost according to the rules of the game.
+	 */
+	public static int determineWinnings(char choice, int total, int bet) {
+		int numWinnings = 0;
+		if (choice == 'S' && total == 7) {
+			numWinnings = bet * 4;
+		}
+		else if (choice == 'H' && total >= 8) {
+			numWinnings = bet;
+		}
+		else if (choice == 'L' && total <=6) {
+			numWinnings = bet;
+		}
+		else {
+			numWinnings = bet * -1;
+		}
+		
+		return numWinnings;
+	}
+
+	public static void main(String[] args) {
+		Scanner input = new Scanner(System.in);
+		
+		//Seed entered by the user that will be used for the Random Number Generator
+		System.out.print("Enter a random seed: ");
+		int userSeed = Integer.parseInt(input.nextLine());
+		
+		//Random Number Generator created using userSeed as the seed
+		Random rand = new Random(userSeed);
+		
+		//Starting amount of money the player has to bet with
+		int moneyAmount = 100;
+		System.out.println("You have " + moneyAmount + " dollars.");
+		
+		//Call to promptForAmount method to retrieve the amount the user wants to bet
+		int betAmount = promptForAmount(input, moneyAmount);
+		
+		//While loop that triggers unless the user enters 0 to quit, and continues the game until the user enters 0 to quit.
+		while (betAmount > 0) {
+			//Determines if the user is betting on High, Low or Sevens by returning only H, L, or S
+			char userChoice = promptForChoice(input);
+			
+			int numDice = 2;
+			
+			//Method call to generate two numbers for an Array that stores two values between 1 and 6 for the two dice
+			int []rollResult = rollDice(rand, numDice);
+			System.out.println("Your dice are showing: " + Arrays.toString(rollResult));
+			
+			//Method call for add up the total of the two numbers stored in the rollResult array
+			int diceTotal = totalDice(rollResult);
+			System.out.println("Your total is: " + diceTotal);
+			
+			//Method call to determine the amount of winnings based on the userChoice, diceTotal, and betAmount
+			int numWinnings = determineWinnings(userChoice, diceTotal, betAmount);
+			//If/else statement used to print different messages based on whether the player won or not, using numWinnings being positive or negative to determine
+			if (numWinnings > 0) {
+				System.out.println("You won " + numWinnings + " dollars!\n");
+			}
+			else {
+				System.out.println("You lost your bet!\n");
+			}
+			
+			//New player money amount that adds the initial amount to the amount the player won or lost
+			moneyAmount = moneyAmount + numWinnings;
+			System.out.println("You have " + moneyAmount + " dollars.");
+			
+			//Method call that prompts the player for a bet again, the loop won't stop until the user enters 0 to quit
+			betAmount = promptForAmount(input, moneyAmount);
+		}
+		
+		System.out.println("\nYou ended the game with " + moneyAmount + " dollars left.");
+		System.out.println("Goodbye!");
+	}
+
+}
