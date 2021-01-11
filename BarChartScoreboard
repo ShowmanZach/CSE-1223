@@ -1,0 +1,117 @@
+/**
+ * Program creates a visual scoreboard based on user inputed Players and Scores
+ * 
+ * @author Zach Showman
+ * @version October 19, 2020
+ */
+import java.util.Scanner; 
+
+public class BarChartScoreboard {
+
+	public static void main(String[] args) {
+		Scanner input = new Scanner (System.in);
+		
+		System.out.print("Enter the number of players: ");
+		int numPlayers = Integer.parseInt(input.nextLine());
+		
+		//Two Arrays that will store player names and scores based on the number of players entered by the user
+		String[] playerNames = new String[numPlayers];
+		int[] playerScores = new int[numPlayers];
+		//Variable to store the max score of all the players, set to the minimum integer value to guarantee it has the max value entered
+		int maxScore = Integer.MIN_VALUE;
+		//Variable to store the playerName with the longest length
+		String maxString = "";
+		
+		//If Statement that will post a goodbye message if the user enters anything less than "1" for numPlayers
+		if (numPlayers < 1) {
+			System.out.println("No players to display?  Goodbye!");
+		}
+		//Else Statement with the remaining program body for all other circumstances
+		else {
+			int i;
+			//For loop to populate each array
+			for (i = 0; i < numPlayers; i++) {
+				System.out.print("Enter a player name: ");
+				playerNames[i] = input.nextLine();
+				
+				//If statement to find the player name with the longest length and assign it to maxString
+				if (playerNames[i].length() > maxString.length()) {
+					maxString = playerNames[i];
+				}
+				
+				System.out.print("Enter the score for " + playerNames[i] + ": ");
+				playerScores[i] = Integer.parseInt(input.nextLine());
+				
+				//If statement to find the highest score and assign it to maxScore
+				if (playerScores[i] > maxScore) {
+					maxScore = playerScores[i];
+				}
+				
+				System.out.println();
+			}
+			
+			String currentScoreboard = "Current Scoreboard";
+			System.out.println(currentScoreboard);
+
+			int j;
+			//For loop to make sure the dashed line is the same length as the String above it 
+			for (j = 0; j < currentScoreboard.length(); j++) {
+				if (j < currentScoreboard.length() - 1) {
+					System.out.print("-");
+				}
+				//Else if statement to make sure the last dash that is printed ends with a new line
+				else if (j == currentScoreboard.length() - 1) {
+					System.out.println("-");
+				}
+			}
+			
+			//New array to make sure the maxScore has only 50 stars, and every other score is proportional
+			int[] numStars = new int[numPlayers];
+			
+			//If statement for if the maxScore is 0
+			if (maxScore == 0) {
+				int pos = 0;
+				//For loop used to make sure the stars for each player start in same position. It uses maxString  
+				//to add white spaces after the other strings until they match the length of the maxString
+				for (pos = 0; pos < numPlayers; pos++) {
+					while (playerNames[pos].length() < maxString.length() + 1) {
+						playerNames[pos] = playerNames[pos] + " ";
+					}
+				}
+				//This for loop will only print the player names with the proper white spaces after
+				for (int x = 0; x < numPlayers; x++) {
+					System.out.println(playerNames[x]);
+				}
+			}
+			else {
+				int k;
+				//For loop used to figure out how many numStars need to be assigned to each player based on the maxScore,
+				//so that the player with the maxScore only has 50 stars, and the other players stars are proportional
+				for (k = 0; k < numPlayers; k++) {
+					numStars[k] = (playerScores[k] * 50) / maxScore;
+				}
+				
+				int pos = 0;
+				//Same as in the above "if" statement, but for all other circumstances
+				for (pos = 0; pos < numPlayers; pos++) {
+					while (playerNames[pos].length() < maxString.length() + 1) {
+						playerNames[pos] = playerNames[pos] + " ";
+					}
+				}
+				
+				int l;
+				//Final loop that prints all the names with proper white spacing, followed by the proper number of stars
+				for (l = 0; l < numPlayers; l++) {
+					System.out.print(playerNames[l]);
+					int m;
+					for (m = 0; m < numStars[l]; m++) {
+						System.out.print("*");
+					}
+					System.out.println();
+				}
+			}
+		}
+		
+		input.close();
+	}
+}
