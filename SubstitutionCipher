@@ -1,0 +1,296 @@
+/**
+ * Program that takes a file, shifts the letters by a specified amount, and outputs the shifted file.
+ * @author Zach Showman
+ * @version November 23, 2020
+ */
+
+import java.util.Scanner;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.PrintWriter;
+import java.util.ArrayList;
+
+public class SubstitutionCipher {
+
+	/**
+     * Private constants used to shift characters for the substitution cipher.
+     */
+    private static final String UPPERCASE = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+    private static final String LOWERCASE = "abcdefghijklmnopqrstuvwxyz";
+
+    /**
+     * Constructs a new String where each letter in the String input is shifted
+     * by the amount shift to the right, preserving whether the original
+     * character was uppercase or lowercase. For example, the String "ABC" with
+     * shift 3 would cause this method to return "DEF". A negative value should
+     * shift to the left. For example, the String "ABC" with shift -3 would
+     * cause this method to return "XYZ". Punctuation, numbers, whitespace and
+     * other non-letter characters should be left unchanged. NOTE: For full
+     * credit you are REQUIRED to use a StringBuilder to build the String in
+     * this method rather than using String concatenation.
+     *
+     * @param input
+     *            String to be encrypted
+     * @param shift
+     *            Amount to shift each character of input to the right
+     * @return the encrypted String as outlined above
+     */
+    public static String shift(String input, int shift) {
+        StringBuilder encoder = new StringBuilder();
+        
+        //If statement for negative shift values
+        if (shift < 0) {
+        	//For loop that takes the input string and shifts it character by character
+        	for (int i = 0; i < input.length(); i++) {
+        		char c = input.charAt(i);
+        		//If statement to keep uppercase letters uppercase with the shift
+        		if (Character.isUpperCase(c)) {
+        			//Compares the current character to all the characters in the UPPERCASE String
+        			for (int k = 0; k < UPPERCASE.length(); k++) {
+        				//Only used when the character matches the index from the UPPERCASE String
+        				if (c == UPPERCASE.charAt(k)) {
+        					//Appends the shifted letter to the StringBuilder String encoder
+        					//Adds 26 to the shift value in order to get a positive output
+        					//Uses remainder in order to properly wrap around the alphabet
+        					encoder.append(UPPERCASE.charAt((k + 26 + shift) % 26));
+        				}
+        			}
+        		}
+        		//Else if statement used for lower case letters, rest is same as above
+        		else if (Character.isLowerCase(c)) {
+        			for (int j = 0; j < LOWERCASE.length(); j++) {
+        				if (c == LOWERCASE.charAt(j)) {
+        					encoder.append(LOWERCASE.charAt((j + 26 + shift) % 26));
+        				}
+        			}
+        		}
+        		else  {
+        			encoder.append(input.charAt(i));
+        		}
+        	}
+        }
+        //Else statement for positive shift values, or a shift value of 0
+        else {
+        	//Same process as negative shift values
+        	for (int i = 0; i < input.length(); i++) {
+        		char c = input.charAt(i);
+        		if (Character.isUpperCase(c)) {
+        			for (int k = 0; k < UPPERCASE.length(); k++) {
+        				if (c == UPPERCASE.charAt(k)) {
+        					//No need to add 26 for positive values
+        					encoder.append(UPPERCASE.charAt((k + shift) % 26));
+        				}
+        			}
+        		}
+        		else if (Character.isLowerCase(c)) {
+        			for (int j = 0; j < LOWERCASE.length(); j++) {
+        				if (c == LOWERCASE.charAt(j)) {
+        					encoder.append(LOWERCASE.charAt((j + shift) % 26));
+        				}
+        			}
+        		}
+        		else  {
+        			encoder.append(input.charAt(i));
+        		}
+        	}
+        }
+        
+        String str = encoder.toString();
+        
+        return str;
+    }
+
+    /**
+     * Displays the message "promptMsg" to the user and reads the next full line
+     * that the user enters. If the user enters an empty string, reports the
+     * error message "ERROR! Empty Input Not Allowed!" and then loops,
+     * repeatedly prompting them with "promptMsg" to enter a new string until
+     * the user enters a non-empty String
+     *
+     * @param in
+     *            Scanner to read user input from
+     * @param promptMsg
+     *            Message to display to user to prompt them for input
+     * @return the String entered by the user
+     */
+    public static String promptForString(Scanner in, String promptMsg) {
+        //Single method retrieving both the input file and output file
+    	System.out.print("Enter an " + promptMsg + " file: ");
+        String userFile = in.nextLine();
+        
+        //Requires user to enter something
+        while (userFile.length() == 0) {
+        	System.out.println("ERROR! Empty Input Not Allowed!");
+        	
+        	System.out.print("Enter an " + promptMsg + " file: ");
+            userFile = in.nextLine();
+        }
+        
+        return userFile;
+    }
+
+    /**
+     * Opens the file inFile for reading and the file outFile for writing,
+     * reading one line at a time from inFile, shifting it the number of
+     * characters given by "shift" and writing that line to outFile. If an
+     * exception occurs, must report the error message: "ERROR! File inFile not
+     * found or cannot write to outFile" where "inFile" and "outFile" are the
+     * filenames given as parameters.
+     *
+     * @param inFile
+     *            the file to be transformed
+     * @param outFile
+     *            the file to write the transformed output to
+     * @param shift
+     *            the amount to shift the characters from inFile by
+     * @return false if an exception occurs and the error message is written,
+     *         otherwise true
+     */
+    public static boolean transformFile(String inFile, String outFile,
+            int shift) {
+    	//ArrayList used to take the lines from the inFile and write them to the outFile
+    	ArrayList<String> lines = new ArrayList<String>();
+    	
+        try {
+        	//Sets up a new file to read from using the inFile String
+    		File textFile = new File(inFile);
+        	Scanner textScanner = new Scanner(textFile);
+        	
+        	//Iterates until the inFile has no more lines left to read
+        	while (textScanner.hasNext()) {
+        		String str = textScanner.nextLine();
+        		//Takes the current line and shifts it the user specified amount
+        		String str2 = shift(str, shift);
+        		//Adds the line after being shifted to the ArrayList lines
+        		lines.add(str2);
+        	}
+        	textScanner.close();
+        }
+        //Catch exception for if the inFile cannot be found
+        catch (FileNotFoundException e) {
+        	System.out.println("ERROR - File " + inFile + " not found!");
+        }
+        
+        try {
+        	//Sets up a new file to copy the shifted lines 
+        	File textFile2 = new File(outFile);
+        	PrintWriter textWriter = new PrintWriter(textFile2);
+        	
+        	int i = 0;
+        	//Prints each line of the lines array until there aren't anymore lines in the array 
+        	while (i < lines.size()) {
+        		textWriter.println(lines.get(i));
+        		i++;
+        	}
+        	textWriter.close();
+        }
+        //Same as above but for the outFile
+        catch (FileNotFoundException e) {
+        	System.out.println("ERROR - File " + outFile + " not found!");
+        }
+        
+
+        // TODO - the following line is only here to allow this program to
+        //  compile.  Replace it and remove this comment when you complete
+        //  this method.
+        return true;
+    }
+
+    /**
+     * Prompts the user to enter a single character choice. The only allowable
+     * values are 'E', 'D' or 'Q'. All other values are invalid, including all
+     * values longer than one character in length, however the user is allowed
+     * to enter values in either lower or upper case. If the user enters an
+     * invalid value, the method displays the error message "ERROR! Enter a
+     * valid value!" and then prompts the user repeatedly until a valid value is
+     * entered. Returns a single uppercase character representing the user's
+     * choice.
+     *
+     * @param in
+     *            Scanner to read user choices from
+     * @return the user's choice as an uppercase character
+     */
+    public static char getChoice(Scanner in) {
+        System.out.print("Enter your choice: ");
+    	String userChoice = in.nextLine();
+    	
+    	char userChar = '.';
+    	//Iterates until the userChar no longer equals '.'
+    	while (userChar == '.') {
+    		//While loop that prints an error if the user inputs a String longer than one character
+    		while (userChoice.length() != 1) {
+    			System.out.println("ERROR! Enter a valid value!");
+    			System.out.print("Enter your choice: ");
+    			userChoice = in.nextLine();
+    		}
+    		//Capitalizes the string entered by the user
+    		String capitalizeChoice = userChoice.toUpperCase();
+    		
+    		//Only changes the value of userChar if the user entered 'E', 'D', or 'Q'
+    		if (capitalizeChoice.charAt(0) == 'E' || capitalizeChoice.charAt(0) == 'D' || capitalizeChoice.charAt(0) == 'Q') {
+    			userChar = capitalizeChoice.charAt(0);
+    		}
+    		//Anything else results in an error message and requires the user to enter another String
+    		else {
+    			System.out.println("ERROR! Enter a valid value!");
+    			System.out.print("Enter your choice: ");
+    			userChoice = in.nextLine();
+    		}
+    	}
+        
+        return userChar;
+    }
+
+    /**
+     * Displays the menu of choices to the user.
+     */
+    public static void displayMenu() {
+        System.out.println("[E]ncode a file");
+        System.out.println("[D]ecode a file");
+        System.out.println("[Q]uit");
+    }
+
+    public static void main(String[] args) {
+        Scanner in = new Scanner(System.in);
+        //Prompts the user if they would like to Encode, Decode, or Quit using the displayMenu method
+        displayMenu();
+        
+        //Takes the string entered by the user and puts it through the getChoice method in order to return a valid character
+        char userChoice = getChoice(in);
+        
+        //Iterates until the user enters 'Q' to quit
+        while (userChoice != 'Q') {
+        	String input = "input";
+        	String output = "output";
+        	
+        	//Gets the file name for the input file and output file using the promptForString method
+        	String inFile = promptForString(in, input);
+        	String outFile = promptForString(in, output);
+        	
+        	//Gets the amount the user wants to shift the letters
+        	System.out.print("Enter a shift amount: ");
+        	int shift = Integer.parseInt(in.nextLine());
+        	
+        	//If the user wants to decode, it inverses the value entered by the user 
+        	if (userChoice == 'D') {
+        		shift = shift * -1;
+        	}
+        	
+        	//Takes the information from the input file, shifts the characters, and writes the new information to the output file using the transformFile method
+        	transformFile(inFile, outFile, shift);
+        	
+        	System.out.println("Finished writing to file.\n");
+        	
+        	//Prompts the user again 
+        	displayMenu();
+        	
+        	userChoice = getChoice(in);
+        	
+        }
+        
+        System.out.println("\nGoodbye!");
+        
+        in.close();
+    }
+
+}
