@@ -1,0 +1,96 @@
+import java.util.Random;
+import java.util.Scanner;
+
+public class FunWithBranching {
+
+	public static void main(String[] args) {
+		Scanner input = new Scanner(System.in);
+		int userSeed;
+		String userName;
+		int num1;
+		int num2; 
+		int ans1;
+		int ans2;
+		int ans3;
+		int ans4;
+		int ans5;
+		int correctAns = 0;
+		double totalAns = 5.0;
+		double percentageCorrect;
+		
+		
+		System.out.print("Enter a random number seed: ");
+		userSeed = Integer.parseInt(input.nextLine());
+		
+		System.out.print("Enter your name: ");
+		userName = input.nextLine();
+		
+		System.out.println("Hello " + userName + "!");
+		System.out.println("Please answer the following questions:");
+		System.out.println("");
+		
+		Random randGen = new Random(userSeed);
+		num1 = randGen.nextInt(20) + 1;
+		num2 = randGen.nextInt(20) + 1;
+		
+		System.out.print(num1 + " + " + num2 + " = ");
+		ans1 = Integer.parseInt(input.nextLine());
+		if (ans1 == (num1 + num2)) {
+			System.out.println("Correct!");
+			correctAns++;
+		} else {
+			System.out.println("Wrong!");
+			System.out.println("The correct answer is: " + (num1 + num2));
+		}
+		System.out.println("");
+		
+		System.out.print(num1 + " - " + num2 + " = ");
+		ans2 = Integer.parseInt(input.nextLine());
+		if (ans2 == (num1 - num2)) {
+			System.out.println("Correct!");
+			correctAns++;
+		} else {
+			System.out.println("Wrong!");
+			System.out.println("The correct answer is: " + (num1 - num2));
+		}
+		System.out.println("");
+		
+		System.out.print(num1 + " * " + num2 + " = ");
+		ans3 = Integer.parseInt(input.nextLine());
+		if (ans3 == (num1 * num2)) {
+			System.out.println("Correct!");
+			correctAns++;
+		} else {
+			System.out.println("Wrong!");
+			System.out.println("The correct answer is: " + (num1 * num2));
+		}
+		System.out.println("");
+		
+		System.out.print(num1 + " / " + num2 + " = ");
+		ans4 = Integer.parseInt(input.nextLine());
+		if (ans4 == (num1 / num2)) {
+			System.out.println("Correct!");
+			correctAns++;
+		} else {
+			System.out.println("Wrong!");
+			System.out.println("The correct answer is: " + (num1 / num2));
+		}
+		System.out.println("");
+		
+		System.out.print(num1 + " % " + num2 + " = ");
+		ans5 = Integer.parseInt(input.nextLine());
+		if (ans5 == (num1 % num2)) {
+			System.out.println("Correct!");
+			correctAns++;
+		} else {
+			System.out.println("Wrong!");
+			System.out.println("The correct answer is: " + (num1 % num2));
+		}
+		System.out.println("");
+		
+		System.out.println("You got " + correctAns + " correct answers.");
+		
+		percentageCorrect = ((correctAns / totalAns) * 100);
+		System.out.println("You got " + percentageCorrect + "% correct.");
+		
+	}
