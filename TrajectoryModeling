@@ -1,0 +1,51 @@
+/**
+ * Program that finds the best angle and speed to shoot an object out of a cannon in order to hit a target
+ * 
+ * @author Zach Showman
+ * @version October 12, 2020
+ **/
+import java.util.Scanner;
+
+public class TrajectoryModeling {
+
+	public static void main(String[] args) {
+		Scanner scnr = new Scanner(System.in);
+		
+		System.out.print("Enter a distance to target: ");
+		double targetDistance = scnr.nextDouble();//This is the ideal distance for us to hit
+		System.out.println();
+		
+		double closestDistance = 0;//This will end up being the closest distance to the target using all speed and angle options
+		double bestAngle = 0;// Best Angle to get us closest to the target
+		double bestSpeed = 0;//Best Speed to get us closest to the target
+		double bestDifferenceDistance = 1;
+		//Loop that runs all speeds through the equation
+		for (double i=1.0; i<30.0; i++) {
+			//Nested loop that runs all angles through the equation
+			for (double j=25.0; j<90.0; j = j+5.0) {
+				double gravity = 9.8;
+				//Equation to find how long the projectile will be in the air
+				double t = (2 * i * Math.sin(Math.toRadians(j)))/gravity;
+				//Used to find the distance that the projectile will travel at Speed i and Angle j
+				double actualDistance = i * t * Math.cos(Math.toRadians(j));
+				//Calculates the absolute value of the User Entered Distance and the distance found at Speed i and Angle j
+				double differenceDistance = Math.abs(targetDistance - actualDistance);
+				//If statement used to find the best of all the speeds and angles, using the differenceDistance to calculate
+				if ((differenceDistance > 0) && (differenceDistance < 1) && (differenceDistance < bestDifferenceDistance)) { 
+					bestAngle = j;
+					bestSpeed = i;
+					bestDifferenceDistance = differenceDistance;
+					closestDistance = actualDistance;
+				}
+			}
+		}
+		System.out.printf("Best angle: %.2f%n", bestAngle);
+		System.out.printf("Best speed: %.2f%n", bestSpeed);
+		System.out.printf("Distance travelled: %.2f%n", closestDistance);
+		//Equation to find how far off the closestDistance is from the targetDistance
+		double missedTargetCenter = Math.abs(targetDistance - closestDistance);
+		System.out.printf("Missed the target center by: %.2f%n", missedTargetCenter);
+		
+		scnr.close();
+	}
+}
