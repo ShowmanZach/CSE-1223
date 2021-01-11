@@ -1,0 +1,72 @@
+/**
+ * Program to copy one file into another, using command line arguments
+ * 
+ * @author Zach Showman
+ * @version November 9, 2020
+ */
+import java.io.FileNotFoundException;
+import java.io.File;
+import java.io.PrintWriter;
+import java.util.Scanner;
+
+public class FilesExpanded {
+
+	/**
+	 * Displays the file given by fname to the screen
+	 * 
+	 * @param fname file to be displayed
+	 */
+	public static void displayFile(String fname) {
+		// TODO: Open the file and print each line to the screen.
+		// TODO: Don't forget to close the file when you are done.
+		try {
+        	File textFile = new File(fname);
+        	Scanner textScanner = new Scanner(textFile);
+        	
+        	while (textScanner.hasNext()) {
+        		String str = textScanner.nextLine();
+        		str = reverse(str);
+        		System.out.println(str);
+        		
+        	}
+        	
+        	textScanner.close();
+        	
+        } catch (FileNotFoundException e) {
+        	System.out.println("ERROR - File " + fname + " not found!");
+        }
+	}
+
+	/**
+	 * Creates a reversed copy of a String
+	 * 
+	 * @param str string to be reversed
+	 * @return reversed copy of str
+	 */
+	public static String reverse(String str) {
+		String reverseString = "";
+		for (int i=str.length()-1; i>-1; i--) {
+			reverseString = reverseString + str.charAt(i);
+		}
+
+		// TODO: Remove the line below - only included so code will compile.
+		return reverseString;
+	}
+
+	public static void main(String[] args) {
+		Scanner input = new Scanner (System.in);
+		
+		System.out.print("Enter a filename (blank line to quit): ");
+		String fileName = input.nextLine();
+		
+		while (!fileName.equals("")) {
+			displayFile(fileName);
+			
+			System.out.print("\n" + "Enter another filename (blank line to quit): ");
+			fileName = input.nextLine();
+		}
+		
+		System.out.println("\n" + "Goodbye!");
+	}
+
+}
