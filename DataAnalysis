@@ -1,0 +1,285 @@
+/**
+ * Takes population data for a state from a file and displays in on the screen with various information
+ * 
+ * @author Zach Showman
+ * @version November 16, 2020
+ */
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.util.Arrays;
+import java.util.Scanner;
+
+public class DataAnalysis {
+
+	/**
+	 * Reads lines from a file into an array
+	 * 
+	 * @param fileName the name of the file, numCounties number of counties to determine the array length
+	 * @return Array with a cope of each line form the file
+	 */
+	public static String[] fileReader (String fileName, int numCounties) {
+		String[] fileReader = new String[numCounties + 1];
+		try {
+			File textFile = new File(fileName);
+			Scanner textScanner = new Scanner(textFile);
+			
+			int idx = 0;
+			while (textScanner.hasNext()) {
+        		fileReader[idx] = textScanner.nextLine();
+				idx++;
+        	}
+			
+			textScanner.close();
+		}
+		catch (FileNotFoundException e) {
+        	System.out.println("ERROR - File " + fileName + " not found!");
+        }
+		
+		return fileReader;
+	}
+	
+	/**
+	 * Splits each line of an array and takes the first index of a line
+	 * 
+	 * @param fileReader file to be split, numCounties number to determine array length
+	 * @return countyNames the names of each county in the file
+	 */
+	public static String[] countyNames(String[] fileReader, int numCounties) {
+		String[] countyNames = new String[numCounties];
+		
+		for (int i = 0; i < numCounties; i++) {
+			String line = fileReader[i + 1];
+			String[] splitLine = line.split(",");
+			countyNames[i] = splitLine[0];
+		}
+		
+		return countyNames;
+	}
+	
+	/**
+	 * Splits each line of an array and takes the second index of a line
+	 * 
+	 * @param fileReader file to be split, numCounties number to determine array length
+	 * @return population2010 population of each county in 2010
+	 */
+	public static int[] population2010(String[] fileReader, int numCounties) {
+		int[] population2010 = new int[numCounties];
+		
+		for (int i = 0; i < numCounties; i++) {
+			String line = fileReader[i + 1];
+			String[] splitLine = line.split(",");
+			population2010[i] = Integer.parseInt(splitLine[1]);
+		}
+		
+		return population2010;
+	}
+	
+	/**
+	 * Splits each line of an array and takes the last index of a line
+	 * 
+	 * @param fileReader file to be split, numCounties number to determine array length
+	 * @return population2019 population of each county in 2019
+	 */
+	public static int[] population2019(String[] fileReader, int numCounties) {
+		int[] population2019 = new int[numCounties];
+		
+		for (int i = 0; i < numCounties; i++) {
+			String line = fileReader[i + 1];
+			String[] splitLine = line.split(",");
+			population2019[i] = Integer.parseInt(splitLine[10]);
+		}
+		
+		return population2019;
+	}
+	
+	/**
+	 * Subtracts indexes of two arrays 
+	 * 
+	 * @param population2010 population of each county in 2010, population2019 population of each county in 2019, 
+	 * numCounties number of counties in each state
+	 * @return populationGrowth amounth the population changed in each county from 2010 to 2019
+	 */
+	public static int[] populationGrowth(int[] population2010, int[] population2019, int numCounties) {
+		int[] populationGrowth = new int[numCounties];
+		
+		for (int i = 0; i < numCounties; i++) {
+			populationGrowth[i] = population2019[i] - population2010[i];
+		}
+		
+		return populationGrowth;
+	}
+	
+	public static double[] growthPercentage(int[] populationGrowth, int[] population2010, int numCounties) {
+		double[] growthPercentage = new double[numCounties];
+		
+		for (int i = 0; i < numCounties; i++) {
+			double growth = populationGrowth[i];
+			double pop2010 = population2010[i];
+			growthPercentage[i] = 100 * growth/pop2010;
+		}
+		
+		return growthPercentage;
+	}
+	
+	public static String[] adjustedCountyNames(String[] countyNames, int numCounties) {
+		String[] adjustedCountyNames = new String[numCounties];
+		
+		for (int i = 0; i < numCounties; i++) {
+			adjustedCountyNames[i] = countyNames[i];
+			
+			while (adjustedCountyNames[i].length() != 16) {
+				adjustedCountyNames[i] = adjustedCountyNames[i] + " ";
+			}
+		}
+		
+		return adjustedCountyNames;
+	}
+	
+	public static String[] adjustedPopulation2019(int[] population2019, int numCounties) {
+		String[] adjustedPopulation2019 = new String[numCounties];
+		
+		for (int i = 0; i < numCounties; i++) {
+			adjustedPopulation2019[i] = Integer.toString(population2019[i]);
+			
+			while (adjustedPopulation2019[i].length() != 8) {
+				adjustedPopulation2019[i] = " " + adjustedPopulation2019[i];
+			}
+		}
+		
+		return adjustedPopulation2019;
+	}
+	
+	public static String[] adjustedPopulation2010(int[] population2010, int numCounties) {
+		String[] adjustedPopulation2010 = new String[numCounties];
+		
+		for (int i = 0; i < numCounties; i++) {
+			adjustedPopulation2010[i] = Integer.toString(population2010[i]);
+			
+			while (adjustedPopulation2010[i].length() != 8) {
+				adjustedPopulation2010[i] = " " + adjustedPopulation2010[i];
+			}
+		}
+		
+		return adjustedPopulation2010;
+	}
+	
+	public static String[] adjustedGrowth(int[] populationGrowth, int numCounties) {
+		String[] adjustedGrowth = new String[numCounties];
+		
+		for (int i = 0; i < numCounties; i++) {
+			adjustedGrowth[i] = Integer.toString(populationGrowth[i]);
+			
+			while (adjustedGrowth[i].length() != 8) {
+				adjustedGrowth[i] = " " + adjustedGrowth[i];
+			}
+		}
+		
+		return adjustedGrowth;
+	}
+	
+	public static int sum(int[] array, int numCounties) {
+		int sum = 0;
+		for (int i = 0; i < numCounties; i++) {
+			sum = sum + array[i];
+		}
+		
+		return sum;
+	}
+	
+	public static void main(String[] args) {
+		Scanner input = new Scanner(System.in);
+		
+		System.out.print("Enter a data file to read: ");
+		String fileName = input.nextLine();
+		
+		System.out.print("Enter the number of counties: ");
+		int numCounties = Integer.parseInt(input.nextLine());
+		
+		String[] fileReader = fileReader(fileName, numCounties);
+		
+		String[] countyNames = countyNames(fileReader, numCounties);
+		
+		int[] population2010 = population2010(fileReader, numCounties);
+		
+		int[] population2019 = population2019(fileReader, numCounties);
+		
+		int[] populationGrowth = populationGrowth(population2010, population2019, numCounties);
+		
+		double[] growthPercentage = growthPercentage(populationGrowth, population2010, numCounties);
+		
+		String[] adjustedCountyNames = adjustedCountyNames(countyNames, numCounties);
+		
+		String[] adjustedPopulation2010 = adjustedPopulation2010(population2010, numCounties);
+		
+		String[] adjustedPopulation2019 = adjustedPopulation2019(population2019, numCounties);
+		
+		String[] adjustedGrowth = adjustedGrowth(populationGrowth, numCounties);
+		
+		System.out.println("County           Pop 2010 Pop 2019   Growth Pct Grow");
+		System.out.println("---------------- -------- -------- -------- ---------");
+		
+		for (int i = 0; i < numCounties; i++) {
+			System.out.printf(adjustedCountyNames[i] + " " + adjustedPopulation2010[i] + " " + adjustedPopulation2019[i] + " " + adjustedGrowth[i] + " " + "%+8.2f%%\n", growthPercentage[i]);
+			
+		}
+		System.out.println("-----------------------------------------------------");
+		
+		int sum2010 = sum(population2010, numCounties);
+		int sum2019 = sum(population2019, numCounties);
+		int sumGrowth = sum(populationGrowth, numCounties);
+		double sum1 = sum2010;
+		double sum2 = sumGrowth;
+		double sumPercent = 100*sum2/sum1;
+		
+		System.out.printf("Total           " + " " + "%8d" + " " + "%8d" + " " + "%8d" + " " + "%+8.2f%%\n", sum2010, sum2019, sumGrowth, sumPercent);
+		
+		int mostGrowth = 0;
+		String mostGrowthName = "";
+		int mostLoss = 0;
+		String mostLossName = "";
+		for(int i = 0; i < numCounties; i++) {
+			if (populationGrowth[i] > mostGrowth) {
+				mostGrowth = populationGrowth[i];
+				mostGrowthName = countyNames[i];
+			}
+			else if (populationGrowth[i] < mostLoss) {
+				mostLoss = populationGrowth[i];
+				mostLossName = countyNames[i];
+			}
+		}
+		System.out.println("\nMost growth: " + mostGrowthName + " (" + mostGrowth + ")");
+		System.out.println("Biggest loss: " + mostLossName + " (" + mostLoss + ")");
+		
+		
+		double largestPercentGrowth = 0;
+		String percentGrowthName = "";
+		double largestPercentLoss = 0;
+		String percentLossName = "";
+		for (int i = 0; i < numCounties; i++) {
+			if (growthPercentage[i] > largestPercentGrowth) {
+				largestPercentGrowth = growthPercentage[i];
+				percentGrowthName = countyNames[i];
+			}
+			else if (growthPercentage[i] < largestPercentLoss) {
+				largestPercentLoss = growthPercentage[i];
+				percentLossName = countyNames[i];
+			}
+		}
+		System.out.printf("Largest Pct growth: " + percentGrowthName + " (" + "%+.2f%%" + ")\n", largestPercentGrowth);
+		System.out.printf("Largest Pct loss: " + percentLossName + " (" + "%+.2f%%" + ")\n", largestPercentLoss);
+		
+		int averagePopulation = sum2019/numCounties;
+		System.out.println("Average 2019 Population per County: " + averagePopulation);
+		
+		int numCountiesAboveAverage = 0;
+		for (int i = 0; i < numCounties; i++) {
+			if (population2019[i] > averagePopulation) {
+				numCountiesAboveAverage++;
+			}
+		}
+		System.out.println("Num. Counties with 2019 Pop. Larger Than Average: " + numCountiesAboveAverage);
+		
+		input.close();
+	}
+
+}
