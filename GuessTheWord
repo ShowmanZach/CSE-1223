@@ -1,0 +1,233 @@
+/**
+ * Your description here
+ * @author Zach Showman	
+ * @version November 26, 2020
+ *
+ */
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Random;
+import java.util.Scanner;
+import java.io.File;
+import java.io.FileNotFoundException;
+
+public class GuessTheWord {
+
+    /**
+     * Takes a filename as input. Reads a list of words from the file into a
+     * list and returns the list. Ensures that all of the words in the list are
+     * in UPPERCASE (i.e. transforms lowercase letters to uppercase before
+     * adding them to the list). Assumes that the file will be correctly
+     * formatted with one word per line (though there may be blank lines with
+     * no words on them). If the file cannot be read prints the
+     * error message "ERROR: File fname not found!" where "fname" is the name of
+     * the file and returns an empty list.  Note that the order of the words in the
+     * list must be the same as the order of the words in the file to pass the
+     * test cases.
+     *
+     * @param fname
+     *            the name of the file to read words from
+     * @return a list of words read from the file in all uppercase letters.
+     */
+    public static List<String> readWords(String fname) {
+    	List<String> words = new ArrayList<String>();
+    	
+    	try {
+    		File textFile = new File(fname);
+    		Scanner textScanner = new Scanner(textFile);
+    		
+    		while (textScanner.hasNext()) {
+    			String str = textScanner.next().toUpperCase();
+    			words.add(str);
+    		}
+    		
+    		System.out.println("Read " + words.size() + " words from the file.");
+        	
+        	textScanner.close();
+        } catch (FileNotFoundException e) {
+        	System.out.println("ERROR: File " + fname + " not found!");	
+        }
+    	
+        return words;
+    }
+
+    /**
+     * Takes a Random object and a list of strings and returns a random String
+     * from the list. Note that this method must not change the list.  The list
+     * is guaranteed to have one or more elements in it.
+     *
+     * @param rnd
+     *            Random number generator object
+     * @param inList
+     *            list of strings to choose from
+     * @return an element from a random position in the list
+     */
+    public static String getRandomWord(Random rnd, List<String> inList) {
+        int randIndex = rnd.nextInt(inList.size());
+        
+        String getRandomWord = inList.get(randIndex);
+        
+        return getRandomWord;
+    }
+
+    /**
+     * Given a String, returns a StringBuilder object that is the same length
+     * but is only '*' characters. For example, given the String DOG as input
+     * returns a StringBuilder object containing "***".
+     *
+     * @param inWord
+     *            The String to be starred
+     * @return a StringBuilder with the same length as inWord, but all stars
+     */
+    public static StringBuilder starWord(String inWord) {
+        StringBuilder starWord = new StringBuilder();
+        
+        for (int i = 0; i < inWord.length(); i++) {
+        	starWord.append('*');
+        }
+        
+        return starWord;
+    }
+
+    /**
+     * Prompts the user to enter a single character. If the user enters a blank
+     * line or more than one character, give the error message "Enter only a single character!"
+     * and prompt them again. When the user enters a single character, return the uppercase 
+     * value of the character they typed.
+     *
+     * @param inScanner
+     *            A scanner to take user input from
+     * @return the uppercase value of the character typed by the user.
+     */
+    public static char getCharacterGuess(Scanner inScanner) {
+        System.out.print("Enter a character to guess: ");
+        String userGuess = inScanner.nextLine();
+        
+        while (userGuess.length() > 1) {
+        	System.out.println("Enter only a single character!");
+        	
+            System.out.print("Enter a character to guess: ");
+            userGuess = inScanner.nextLine();
+        }
+
+        char userChar = Character.toUpperCase(userGuess.charAt(0));
+        
+        return userChar;
+    }
+
+    /**
+     * Count the number of times the character ch appears in the String word.
+     *
+     * @param ch
+     *            character to count.
+     * @param word
+     *            String to examine for the character ch.
+     * @return a count of the number of times the character ch appears in the
+     *         String word
+     */
+    public static int charCount(char ch, String word) {
+        int charCount = 0;
+    	int indexOf = word.indexOf(ch);
+        
+        while (indexOf > -1) {
+        	charCount++; 
+        	indexOf = word.indexOf(ch, indexOf + 1);
+        }
+        
+        System.out.println("The character " + ch + " occurs in " + charCount + " positions.");
+    	
+        return charCount;
+    }
+
+    /**
+     * Modify the StringBuilder object starWord everywhere the char ch appears
+     * in the String word. For example, if ch is 'G', word is "GEOLOGY", and
+     * starWord is "**O*O*Y", then this method modifies starWord to be
+     * "G*O*OGY".  Your code should assume that word and starWord are
+     * the same length.
+     *
+     * @param ch
+     *            the character to look for in word.
+     * @param word
+     *            the String containing the full word.
+     * @param starWord
+     *            the StringBuilder containing the full word masked by stars.
+     */
+    public static void modifyStarWord(char ch, String word,
+            StringBuilder starWord) {
+        int index = word.indexOf(ch);
+        
+        while (index > -1) {
+        	starWord.replace(index, index + 1, Character.toString(ch));
+        	index = word.indexOf(ch, index + 1);
+        }
+    }
+
+    public static void main(String[] args) {
+        Scanner inScanner = new Scanner(System.in);
+        
+        System.out.print("Enter a random seed: ");
+        int userSeed = Integer.parseInt(inScanner.nextLine());
+        
+        Random rnd = new Random(userSeed);
+        
+        System.out.print("Enter a filename for your wordlist: ");
+        String fname = inScanner.nextLine();
+        
+        List<String> words = readWords(fname);
+        
+        char playAgain = 'Y';
+        List<Character> userGuesses = new ArrayList<Character>();
+        while (playAgain == 'Y') {
+        	String randomWord = getRandomWord(rnd, words);
+        
+        	StringBuilder starWord = starWord(randomWord);
+        	
+        	int numGuesses = 0;
+        	while (starWord.indexOf("*") > -1) {
+        		System.out.println("The word to guess is: " + starWord);
+        	
+        		System.out.println("Previous characters guessed: " + userGuesses.toString());
+        	
+        		char userGuess = getCharacterGuess(inScanner);
+        		userGuesses.add(userGuess);
+        	
+        		charCount(userGuess, randomWord);
+        	
+        		modifyStarWord(userGuess, randomWord, starWord);
+        		
+        		System.out.println("\nThe word to guess is: " + starWord);
+        		
+        		System.out.print("Enter your guess for the word: ");
+        		String userWord = inScanner.nextLine().toUpperCase();
+        		numGuesses++;
+        		
+        		if (userWord.equals(randomWord)) {
+        			System.out.println("Yes! " + userWord + " is the correct word!");
+        			starWord.replace(0, starWord.length(), userWord);
+        		}
+        		else {
+        			System.out.println("That is not the word.");
+        		}
+        		System.out.println();
+        	}
+        	
+        	System.out.println("That took you " + numGuesses + " guesses.");
+        	
+        	System.out.print("Would you like a rematch [Y/N]?: ");
+        	String userInput = inScanner.nextLine().toUpperCase();
+        	
+        	while (!userInput.equals("Y") || !userInput.equals("N")) {
+        		System.out.println("Please enter only a Y or an N.");
+        		
+        		System.out.print("Would you like a rematch [Y/N]?: ");
+            	userInput = inScanner.nextLine().toUpperCase();
+        	}
+        	playAgain = userInput.charAt(0);
+        }
+        System.out.println("Goodbye!");
+        
+        inScanner.close();
+    }
+
+}
